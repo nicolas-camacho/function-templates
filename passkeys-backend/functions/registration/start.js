@@ -1,38 +1,41 @@
 const axios = require('axios');
 
 const assets = Runtime.getAssets();
-const { detectMissingParams, errorLogger } = require(assets[
-  '/services/helpers.js'
-].path);
+const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 exports.handler = async (context, event, callback) => {
-  const { RELYING_PARTY, API_URL, SERVICE_SID, ACCOUNT_SID, AUTH_TOKEN } =
-    context;
+  const { RELYING_PARTY, API_URL, ANDROID_APP_KEYS } = context;
+
+  const response = new Twilio.Response();
+  response.appendHeader('Content-Type', 'application/json');
 
   // Verify request comes with username
   const missingParams = detectMissingParams(['username'], event);
-  if (missingParams)
-    return callback(
+  if (missingParams) {
+    response.setStatusCode(400);
+    response.setBody(
       `Missing parameters; please provide: '${missingParams.join(', ')}'.`
     );
+
+    return callback(null, response);
+  }
+
+  const { username, password } = context.getTwilioClient();
 
   // Request body sent to passkeys verify URL call
   /* eslint-disable camelcase */
   const requestBody = {
-    friendly_name: 'TouchID',
-    factory_type: 'passkeys',
-    entity: {
-      identity: event.username,
-      display_name: event.username,
+    friendly_name: 'Passkey Example',
+    to: {
+      user_identifier: event.username,
     },
-    config: {
+    content: {
       relying_party: {
         id: RELYING_PARTY,
         name: 'PasskeySample',
         origins: [
           `https://${RELYING_PARTY}`,
-          'android:apk-key-hash:r-BvX79axOKgiSKVuBwFSylcgHo7aUuxCnumzx4XT6E',
-          'android:apk-key-hash:UFzWPaUfGY8_scKVC2tGtgb-xBNXS5Z_PYajz3P-BVM',
+          ...(ANDROID_APP_KEYS.split(',') || []),
         ],
       },
       authenticator_criteria: {
@@ -44,22 +47,24 @@ exports.handler = async (context, event, callback) => {
   };
 
   // Factor URL of the passkeys service
-  const factorURL = `${API_URL}Services/${SERVICE_SID}/Factors`;
+  const factorURL = `${API_URL}/Factors`;
 
   // Call made to the passkeys service
   try {
-    const response = await axios.post(factorURL, requestBody, {
+    const APIResponse = await axios.post(factorURL, requestBody, {
       auth: {
-        username: ACCOUNT_SID,
-        password: AUTH_TOKEN,
+        username,
+        password,
       },
     });
-    return callback(null, {
-      ...response.data.config.creation_request,
-      factor_sid: response.data.sid,
-    });
+
+    response.setStatusCode(200);
+    response.setBody(APIResponse.data.next_step);
   } catch (error) {
-    errorLogger(error);
-    return callback(null, error);
+    const statusCode = error.status || 400;
+    response.setStatusCode(statusCode);
+    response.setBody(error.message);
   }
+
+  return callback(null, response);
 };

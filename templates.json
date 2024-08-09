@@ -341,9 +341,24 @@
       "description": "Transfers a call to another number"
     },
     {
+      "id": "verify-prefill",
+      "name": "Twilio Verify Pre-Fill Sample App",
+      "description": "Showcases the new Twilio Lookup Pre-Fill API"
+    },
+    {
+      "id": "reminder-message",
+      "name": "Send scheduled reminder messages",
+      "description": "Schedule a reminder message to be sent a specified time after the initial message"
+    },
+    {
       "id": "passkeys-backend",
       "name": "Backend for passkeys app",
       "description": "Connect applications with the passkeys service"
+    },
+    {
+      "id": "ai-assistants-samples",
+      "name": "AI Assistants Samples",
+      "description": "Functions to connect AI Assistants to various Channels and Tools"
     }
   ]
 }

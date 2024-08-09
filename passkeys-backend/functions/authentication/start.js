@@ -1,31 +1,38 @@
 const axios = require('axios');
 
-const assets = Runtime.getAssets();
-const { errorLogger } = require(assets['/services/helpers.js'].path);
-
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, _, callback) => {
-  const { RELYING_PARTY, API_URL, SERVICE_SID, ACCOUNT_SID, AUTH_TOKEN } =
-    context;
+  const { RELYING_PARTY, API_URL } = context;
+
+  const response = new Twilio.Response();
+  response.appendHeader('Content-Type', 'application/json');
+
+  const { username, password } = context.getTwilioClient();
 
   const requestBody = {
-    details: {
-      rpId: RELYING_PARTY,
+    content: {
+      // eslint-disable-next-line camelcase
+      rp_id: RELYING_PARTY,
     },
   };
 
-  const challengeURL = `${API_URL}Services/${SERVICE_SID}/Challenges`;
+  const challengeURL = `${API_URL}/Verifications`;
 
   try {
-    const response = await axios.post(challengeURL, requestBody, {
+    const APIResponse = await axios.post(challengeURL, requestBody, {
       auth: {
-        username: ACCOUNT_SID,
-        password: AUTH_TOKEN,
+        username,
+        password,
       },
     });
-    return callback(null, response.data.details);
+
+    response.setStatusCode(200);
+    response.setBody(APIResponse.data.next_step);
   } catch (error) {
-    errorLogger(error);
-    return callback('Something went wrong');
+    const statusCode = error.status || 400;
+    response.setStatusCode(statusCode);
+    response.setBody(error.message);
   }
+
+  return callback(null, response);
 };

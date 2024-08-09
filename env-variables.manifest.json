@@ -1851,6 +1851,164 @@
         "configurable": true,
         "contentKey": null
       }
+    ],
+    "verify-prefill": [
+      {
+        "key": "VERIFY_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Verify Service",
+        "link": "https://www.twilio.com/console/verify/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
+    "reminder-message": [
+      {
+        "key": "MESSAGING_SERVICE_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of a Twilio Messaging Service that will be used for your reminder email.",
+        "link": "https://console.twilio.com/us1/develop/sms/services",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "DELAY_IN_MINUTES",
+        "required": false,
+        "format": "number",
+        "description": "Delay of how many minutes it should take after the incoming message to sent out a reminder. Minimum: 15 minutes",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "TWILIO_SMS_WEBHOOK_URL",
+        "required": true,
+        "format": "text",
+        "description": "The path to the webhook",
+        "link": null,
+        "default": "/respond",
+        "configurable": false,
+        "contentKey": null
+      }
+    ],
+    "passkeys-backend": [
+      {
+        "key": "API_URL",
+        "required": true,
+        "format": "url",
+        "description": "The URL of the comms API for passkeys",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "RELYING_PARTY",
+        "required": true,
+        "format": "url",
+        "description": "The domain of the relying party",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "ANDROID_APP_KEYS",
+        "required": false,
+        "format": "list(text)",
+        "description": "The domain of the adroid identity provider",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      }
+    ],
+    "ai-assistants-samples": [
+      {
+        "key": "ACCOUNT_SID",
+        "required": true,
+        "format": "sid",
+        "description": "SID of your Twilio Account or Subaccount",
+        "link": "https://www.twilio.com/console",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "AUTH_TOKEN",
+        "required": true,
+        "format": "text",
+        "description": "Auth Token of your Twilio Account or Subaacount",
+        "link": "https://www.twilio.com/console",
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "ASSISTANT_SID",
+        "required": true,
+        "format": "text",
+        "description": "The ID of your AI Assistant (starts with ai_asst_)",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "GOOGLE_MAPS_API_KEY",
+        "required": true,
+        "format": "text",
+        "description": "API key for Google Maps service",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "OPENAI_API_KEY",
+        "required": false,
+        "format": "secret",
+        "description": "API key for OpenAI used in Internet Search tool",
+        "link": null,
+        "default": null,
+        "configurable": true,
+        "contentKey": null
+      },
+      {
+        "key": "EXA_API_KEY",
+        "required": true,
+        "format": "text",
+        "description": "API key for Exa used in Internet Search tool",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "FLEX_WORKFLOW_SID",
+        "required": true,
+        "format": "text",
+        "description": "Flex Workflow SID used for Flex Handoffs",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      },
+      {
+        "key": "FLEX_WORKSPACE_SID",
+        "required": true,
+        "format": "text",
+        "description": "Flex Workspace SID used for Flex Handoffs",
+        "link": null,
+        "default": null,
+        "configurable": false,
+        "contentKey": null
+      }
     ]
   }
 }

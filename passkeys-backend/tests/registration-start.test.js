@@ -3,6 +3,14 @@ const helpers = require('../../test/test-helper');
 
 jest.mock('axios');
 
+const mockContext = {
+  ANDROID_APP_KEYS: 'key1,key2,key3',
+  getTwilioClient: () => ({
+    username: 'mockUsername',
+    password: 'mockPassword',
+  }),
+};
+
 describe('registration/start', () => {
   beforeAll(() => {
     jest.clearAllMocks();
@@ -11,7 +19,7 @@ describe('registration/start', () => {
       '/services/helpers.js',
       '../assets/services/helpers.private.js'
     );
-    helpers.setup({}, runtime);
+    helpers.setup(mockContext, runtime);
     handlerFunction = require('../functions/registration/start').handler;
   });
   afterAll(() => {
@@ -23,27 +31,29 @@ describe('registration/start', () => {
   });
 
   it('returns an error response indicating the missing parameters', (done) => {
-    const callback = (_err) => {
-      expect(_err).toBeDefined();
-      expect(_err).toEqual(`Missing parameters; please provide: 'username'.`);
+    const callback = (_, { _body, _statusCode }) => {
+      expect(_statusCode).toBeDefined();
+      expect(_body).toBeDefined();
+      expect(_statusCode).toEqual(400);
+      expect(_body).toEqual(`Missing parameters; please provide: 'username'.`);
       done();
     };
-    handlerFunction({}, {}, callback);
+    handlerFunction(mockContext, {}, callback);
   });
 
   it('returns error with unsuccesfull request', (done) => {
     const expectedError = new Error('something bad happened');
     axios.post = jest.fn(() => Promise.reject(expectedError));
 
-    const callback = (_err, result) => {
-      expect(result).toBeDefined();
+    const callback = (_, { _body }) => {
+      expect(_body).toBeDefined();
       expect(axios.post).toHaveBeenCalledTimes(1);
-      expect(result).toEqual(expectedError);
+      expect(_body).toEqual(expectedError.message);
       done();
     };
 
     handlerFunction(
-      {},
+      mockContext,
       {
         username: 'test-username',
       },

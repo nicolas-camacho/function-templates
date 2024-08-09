@@ -5,17 +5,11 @@ const detectMissingParams = (paramNames, event) => {
   return missingParams.length > 0 ? missingParams : null;
 };
 
-const errorLogger = (error) => {
-  if (error.response) {
-    console.log('Client has given an error', error);
-  } else if (error.request) {
-    console.log('Runtime error', error);
-  } else {
-    console.log(error);
-  }
+const isEmpty = (requestBody) => {
+  return Object.keys(requestBody).length === 0;
 };
 
 module.exports = {
   detectMissingParams,
-  errorLogger,
+  isEmpty,
 };
