@@ -184,7 +184,7 @@
         const usernameElement = document.getElementById("usr_input");
         const errorElement = document.getElementById("error");
         const continueButton = document.getElementById("continue");
-        window.intlTelInput(usernameElement, {
+        const iti = window.intlTelInput(usernameElement, {
             initialCountry: "us",
             showSelectedDialCode: true,
             utilsScript: "https://cdn.jsdelivr.net/npm/intl-tel-input@19.5.3/build/js/utils.js",
@@ -243,7 +243,7 @@
         }
  
         const signUp = async () => {
-            const username = usernameElement.value
+            const username = iti.getNumber(window.intlTelInputUtils.numberFormat.E164);
 
             try {
                 const response = await fetch(`./registration/start`, {
