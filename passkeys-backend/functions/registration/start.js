@@ -8,6 +8,9 @@ exports.handler = async (context, event, callback) => {
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
+  response.appendHeader('Access-Control-Allow-Origin', '*');
+  response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET');
+  response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   // Verify request comes with username
   const missingParams = detectMissingParams(['username'], event);
@@ -30,6 +33,9 @@ exports.handler = async (context, event, callback) => {
       user_identifier: event.username,
     },
     content: {
+      user: {
+        display_name: event.username,
+      },
       relying_party: {
         id: RELYING_PARTY,
         name: 'PasskeySample',
