@@ -22,13 +22,22 @@ exports.handler = async (context, event, callback) => {
 
   const { username, password } = context.getTwilioClient();
 
+  const responseData = event.response
+    ? event.response
+    : {
+        clientDataJSON: event.clientDataJSON,
+        authenticatorData: event.authenticatorData,
+        signature: event.signature,
+        userHandle: event.userHandle,
+      };
+
   const requestBody = {
     content: {
       rawId: event.rawId,
       id: event.id,
-      authenticatorAttachment: event.authenticatorAttachment,
-      type: event.type,
-      response: event.response,
+      authenticatorAttachment: event.authenticatorAttachment || 'platform',
+      type: event.type || 'public-key',
+      response: responseData,
     },
   };
 
