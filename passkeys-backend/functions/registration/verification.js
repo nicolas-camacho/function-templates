@@ -27,10 +27,9 @@ exports.handler = async (context, event, callback) => {
   const responseData = event.response
     ? event.response
     : {
+        attestationObject: event.attestationObject,
         clientDataJSON: event.clientDataJSON,
-        authenticatorData: event.authenticatorData,
-        signature: event.signature,
-        userHandle: event.userHandle,
+        transports: event.transports,
       };
 
   const requestBody = {
