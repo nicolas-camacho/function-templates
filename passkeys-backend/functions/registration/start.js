@@ -37,10 +37,10 @@ exports.handler = async (context, event, callback) => {
         display_name: event.username,
       },
       relying_party: {
-        id: RELYING_PARTY,
+        id: RP_DOMAIN,
         name: 'PasskeySample',
         origins: [
-          `https://${RELYING_PARTY}`,
+          ...(ORIGINS.split(',') || []),
           ...(ANDROID_APP_KEYS.split(',') || []),
         ],
       },
