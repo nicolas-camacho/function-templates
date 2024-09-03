@@ -6,7 +6,7 @@
     ],
     "target": {
       "namespace": "web",
-      "site": "{RP_DOMAIN}"
+      "site": "https://example.com"
     }
   },
   {

@@ -1,7 +1,7 @@
 {
     "webcredentials": {
         "apps": [
-            "{ORIGIN_IOS_APP_HASH}"
+            "ABCDE12345.com.example.app"
         ]
     }
 }
