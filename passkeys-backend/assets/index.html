@@ -15,36 +15,131 @@
             body {
                 margin: 0;
                 display: flex;
-                place-items: center;
                 min-width: 320px;
                 min-height: 100vh;
                 flex-direction: unset;
                 background-color: rgb(237, 242, 247);
             }
 
-            #container, #modal, #app {
+            .header {
+                background-color: #117DE3;
+                height: 400px;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                z-index: 0;
+            }
+
+            .header-logged {
+                background-color: #117DE3;
+                height: 120px;
+                width: 100%;
+                position: absolute;
+                top: 0;
+                z-index: 0;
+            }
+
+            .header-welcome {
+                background-color: #ECECF0;
+                top: 120px;
+                height: 301px;
+                width: 100%;
+                position: absolute;
+                z-index: 0;
+                display: grid;
+                place-content: center;
+                color: #8891AA;
+            }
+
+            .dummy-searchbar {
+                position: absolute;
+                width: 600px;
+                height: 64px;
+                top: 484px;
+                left: 50%;
+                transform: translateX(-50%);
+                border-radius: 100px;
+                background-color: #ECECF0;
+                z-index: 0;
+            }
+
+            .dummy-frame {
+                position: absolute;
+                top: 605px;
+                left: 50%;
+                transform: translateX(-50%);
+            }
+
+            .header-welcome > h1 {
+                font-size: 36px;
+                font-weight: 700;
+            }
+
+            .logo-buildathon {
+                position: absolute;
+                top: 40px;
+                left: 40px;
+            }
+
+            #container {
+                position: absolute;
+                left: 50%;
+                top: 200px;
+                transform: translateX(-50%);
                 max-width: 1280px;
-                margin: 0 auto;
-                padding: 4rem;
+                padding: 5rem 4rem;
                 text-align: center;
-                border-radius: 10px;
+                border-radius: 8px;
                 background-color: #FFFFFF;
                 box-shadow: 100px 100px 69px -29px rgba(0, 0, 0, 0.07);
+                z-index: 1;
+            }
+
+            #modal {
+                position: absolute;
+                left: 50%;
+                top: 200px;
+                transform: translateX(-50%);
+                max-width: 1280px;
+                padding: 4rem 4rem;
+                text-align: center;
+                border-radius: 8px;
+                background-color: #FFFFFF;
+                box-shadow: 100px 100px 69px -29px rgba(0, 0, 0, 0.07);
+                z-index: 1;
+            }
+
+            #app {
+                position: absolute;
+                left: 50%;
+                top: 304px;
+                transform: translateX(-50%);
+                padding: 5rem 4rem;
+                text-align: center;
+                border-radius: 24px;
+                background-color: #FFFFFF;
+                box-shadow: 100px 100px 69px -29px rgba(0, 0, 0, 0.07);
+                z-index: 1; 
             }
 
             .title {
                 margin: 25px 0;
-                font-size: 20px;
+                font-size: 24px;
                 justify-content: center;
                 font-weight: 500;
             }
 
+            .body {
+                font-size: 16px;
+                line-height: 25px;
+                font-weight: 400;
+            }
+
             #usr_input {
-                width: 250px;
-                padding: 0.8rem !important;
+                width: 300px;
+                padding: 0.8rem 0.8rem 0.8rem 6rem !important;
                 border: 1px solid rgb(136, 145, 170);
                 border-radius: 4px;
-                padding: 0.8rem;
                 font-size: 16px;
             }
 
@@ -52,17 +147,11 @@
                 display: none;
             }
 
-            .iti {
-                display: flex;
-                gap: 10px
-            }
-
             .iti__arrow {
                 display: none;
             }
 
             .iti__flag-container {
-                position: relative;
                 border: 1px solid rgb(136, 145, 170);
                 border-radius: 4px;
                 padding: 0.8rem;
@@ -75,7 +164,13 @@
             .input_container {
                 display: flex;
                 flex-direction: column;
-                gap: 10px;
+                gap: 4px;
+                margin-top: 20px;
+            }
+
+            .input_container.logged {
+                margin-top: 40px;
+                align-items: center;
             }
 
             .modal_input {
@@ -100,7 +195,7 @@
 
 
             .btn {
-                padding: 15px 0;
+                padding: 15px 0px;
                 border-radius: 50px;
                 font-weight: 600;
                 font-size: 16px;
@@ -110,6 +205,17 @@
                 border-width: 0;
                 color: #FFFFFF;
                 background-color: rgb(205, 210, 216);
+            }
+
+            .continue_signin_btn {
+                padding: 15px 32px;
+                border-radius: 50px;
+                font-weight: 600;
+                font-size: 16px;
+                width: fit-content;
+                border-width: 0;
+                color: #FFFFFF;
+                background-color: rgb(2, 99, 224);
             }
 
             .enable {
@@ -129,6 +235,13 @@
                 font-size: 10px;
             }
 
+            .legal {
+                font-size: 12px;
+                color: #7F8487;
+                line-height: 20px;
+                margin-top: 10px;
+            }
+
             .passkey_btn {
                 border-width: 1px;
                 border-color: rgb(2, 99, 224);
@@ -139,46 +252,94 @@
         </style>
     </head>
     <body>
+        <div id="header-app" class="header">
+            <img class="logo-buildathon" src="./Logo-Buildathon.svg" />
+        </div>
+        <div id="full-app" class="invisible">
+            <div class="header-logged">
+                <img class="logo-buildathon" src="./Logo-Buildathon.svg" />
+            </div>
+            <div class="header-welcome">
+                <h1 id="welcome-owlbank" class="welcome-title">Welcome to OwlBank</h1>
+            </div>
+            <div class="dummy-searchbar"></div>
+            <img src="Frame.svg" alt="" class="dummy-frame">
+        </div>
         <div id="container">
-            <h1 class="title">Sign up or sign in</h1>
+            <svg id="owlbak-logo-main" width="48" height="48" viewBox="0 0 48 48" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="24" cy="24" r="24" fill="#117DE3"/>
+                <path d="M19.944 23.0968C20.7233 23.0968 21.3551 22.4088 21.3551 21.5601C21.3551 20.7114 20.7233 20.0234 19.944 20.0234C19.1647 20.0234 18.533 20.7114 18.533 21.5601C18.533 22.4088 19.1647 23.0968 19.944 23.0968Z" fill="white"/>
+                <path d="M26.645 21.5601C26.645 22.4088 27.2767 23.0968 28.056 23.0968C28.8353 23.0968 29.467 22.4088 29.467 21.5601C29.467 20.7114 28.8353 20.0234 28.056 20.0234C27.2767 20.0234 26.645 20.7114 26.645 21.5601Z" fill="white"/>
+                <path fill-rule="evenodd" clip-rule="evenodd" d="M13.7333 23.0667C13.7333 17.3965 18.3299 12.8 24 12.8C29.6701 12.8 34.2667 17.3965 34.2667 23.0667V24C34.2667 30.1856 29.2523 35.2 23.0667 35.2H14.5231C14.0869 35.2 13.7333 34.8464 13.7333 34.4103V23.0667ZM19.7963 16.9499C17.4584 16.9499 15.5632 19.014 15.5632 21.5601C15.5632 24.1062 17.4584 26.1703 19.7963 26.1703H22.7947L23.9706 27.8778V27.9631L24 27.9205L24.0294 27.9631V27.8778L25.2053 26.1703H28.2037C30.5416 26.1703 32.4368 24.1062 32.4368 21.5601C32.4368 19.014 30.5416 16.9499 28.2037 16.9499C26.0355 16.9499 24.248 18.7253 24 21.014C23.752 18.7253 21.9645 16.9499 19.7963 16.9499Z" fill="white"/>
+                </svg>
+            <h1 class="title">Welcome!</h1>
+            <p class="body">To get started, or sign-in <br/> please enter your mobile number.</p>
             <div class="input_container">
                 <div class="input_component">
                     <input type="tel" name="username_input" id="usr_input" oninput="checkAvalibility()">
                 </div>
                 <button type="button" class="btn continue_btn" id="continue" onclick="login()" disabled>Continue</button>
-                <span class="separator">&#8213; or &#8213;</span>
-                <button type="button" class="btn passkey_btn" onclick="signIn()">Sign in with passkey</button>
+                <span id="passkeyAvailable-span" class="separator invisible">&#8213; or &#8213;</span>
+                <button id="passkeyAvailable-button" type="button" class="btn passkey_btn invisible" onclick="signIn()">Sign in with passkey</button>
+                <span class="legal">By Signing-up or creating an account, you <br/> acknowledge that you read the <a>Privacy Notice</a></span>
             </div>
         </div>
         <div id="modal" class="invisible">
+            <img src="./illustration_passkeys_prompt.svg" alt="face-id" width="156">
             <h1 class="title">Sign-in with your face,<br> fingerprint or PIN</h1>
-            <p>Harness your device capabilities for a fast<br> passkey login with maximun security.</p>
-            <a>Learn more &rarr;</a>
+            <p class="body">Harness your device capabilities for a fast<br> passkey login with maximun security.<br/> <a>Learn more &rarr;</a></p>
             <div class="input_container modal_input">
                 <button class="btn continue_btn enable" onclick="signUp()">Continue</button>
                 <a class="skip_btn">Skip</a>
             </div>
         </div>
         <div id="app" class="invisible">
-            <h1 class="title" id="welcome"></h1>
-            <div class="input_container">
-                <button class="btn continue_btn enable" onclick="logOut()">Log out</button>
+            <img src="./Twilio.svg" alt="twilio" width="48">
+            <h1 class="title" id="welcome">Great!</h1>
+            <p id="finalText"></p>
+            <div class="input_container logged">
+                <button id="finalButton" class="continue_signin_btn" onclick="logOut()"></button>
+                <a id="finalLink" class="skip_btn" onclick="removePasskey()"></a>
             </div>
         </div>
     </body>
     <script>
 
         let sessionUsername = sessionStorage.getItem("session");
+        let passkeyAvailable = localStorage.getItem("passkeyavailable");
+        const signUpText = "You successfully created your account 👋"
+        const signInText = "You successfully signed in 👋"
+        const signUpButtonText = "Continue to Sign In"
+        const signInButtonText = "Reset and start from scratch"
+        const signUpLinkText = "Reset & start from scratch"
+        const signInLinkText = "Sign in again"
 
         const loadApp = (username) => {
-            document.getElementById("welcome").innerHTML = `Welcome ${username}`
             document.getElementById("modal").classList.add("invisible");
             document.getElementById("container").classList.add("invisible");
+            document.getElementById("header-app").classList.add("invisible");
             document.getElementById("app").classList.remove("invisible");
+            document.getElementById("full-app").classList.remove("invisible");
+
+            showSignIn();
+        }
+
+        const showSignIn = () => {
+            document.getElementById("passkeyAvailable-span").classList.remove("invisible");
+            document.getElementById("passkeyAvailable-button").classList.remove("invisible");
+        }
+
+        const hideSignIn = () => {
+            document.getElementById("passkeyAvailable-span").classList.add("invisible");
+            document.getElementById("passkeyAvailable-button").classList.add("invisible");
         }
 
         if (sessionUsername) {
             loadApp(sessionUsername)
+        }
+
+        if (passkeyAvailable) {
+            showSignIn();
         }
         
         const usernameElement = document.getElementById("usr_input");
@@ -226,6 +387,15 @@
 
                         const { status, identity } = await authentication.json();
                         if(status === "approved") {
+                            document.getElementById("finalText").innerText = signInText;
+                            document.getElementById("finalButton").innerText = signInButtonText;
+                            document.getElementById("finalLink").innerText = signInLinkText;
+
+                            document.getElementById("welcome-owlbank").innerText = "Welcome back to OwlBank!";
+
+                            document.getElementById("finalButton").onclick = removePasskey;
+                            document.getElementById("finalLink").onclick = logOut;
+
                             sessionStorage.setItem('session', identity);
                             loadApp(identity);
                         } else {
@@ -268,7 +438,17 @@
 
                 const { status } = await verificationResponse.json();
                 if (status === 'verified') {
+                    document.getElementById("finalText").innerText = signUpText;
+                    document.getElementById("finalButton").innerText = signUpButtonText;
+                    document.getElementById("finalLink").innerText = signUpLinkText;
+
+                    document.getElementById("welcome-owlbank").innerText = "Welcome to OwlBank!";
+
+                    document.getElementById("finalButton").onclick = logOut;
+                    document.getElementById("finalLink").onclick = removePasskey;
+
                     sessionStorage.setItem('session', username);
+                    localStorage.setItem('passkeyavailable', true);
                     loadApp(username);
                 }
             } catch (error) {
@@ -279,7 +459,28 @@
         const logOut = () => {
             sessionStorage.removeItem("session");
             document.getElementById("app").classList.add("invisible");
+            document.getElementById("full-app").classList.add("invisible");
             document.getElementById("container").classList.remove("invisible");
+            document.getElementById("header-app").classList.remove("invisible");
+        }
+
+        const removePasskey = () => {
+            localStorage.removeItem("passkeyavailable");
+            document.getElementById("app").classList.add("invisible");
+            document.getElementById("container").classList.remove("invisible");
+            hideSignIn();
+            logOut();
+        }
+
+        if (sessionUsername && passkeyAvailable) {
+            document.getElementById("finalText").innerText = signInText;
+            document.getElementById("finalButton").innerText = signInButtonText;
+            document.getElementById("finalLink").innerText = signInLinkText;
+
+            document.getElementById("welcome-owlbank").innerText = "Welcome back to OwlBank!";
+
+            document.getElementById("finalButton").onclick = removePasskey;
+            document.getElementById("finalLink").onclick = logOut;
         }
     </script>
 </html>
