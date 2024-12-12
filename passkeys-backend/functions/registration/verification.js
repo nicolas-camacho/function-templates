@@ -9,6 +9,9 @@ exports.handler = async (context, event, callback) => {
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
+  response.appendHeader('Access-Control-Allow-Origin', '*');
+  response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET');
+  response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
   if (isEmpty(event)) {
     response.setStatusCode(400);
@@ -19,15 +22,23 @@ exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  const { username, password } = context.getTwilioClient();
+  const { username: clientSID, password: clientToken } = context.getTwilioClient();
+
+  const responseData = event.response
+    ? event.response
+    : {
+        attestationObject: event.attestationObject,
+        clientDataJSON: event.clientDataJSON,
+        transports: event.transports,
+      };
 
   const requestBody = {
     content: {
       id: event.id,
       rawId: event.rawId,
-      authenticatorAttachment: event.authenticatorAttachment,
-      type: event.type,
-      response: event.response,
+      authenticatorAttachment: event.authenticatorAttachment || 'platform',
+      type: event.type || 'public-key',
+      response: responseData,
     },
   };
 
@@ -36,8 +47,8 @@ exports.handler = async (context, event, callback) => {
   try {
     const APIResponse = await axios.post(verifyFactorURL, requestBody, {
       auth: {
-        username,
-        password,
+        username: clientSID,
+        password: clientToken,
       },
     });
     response.setStatusCode(200);
