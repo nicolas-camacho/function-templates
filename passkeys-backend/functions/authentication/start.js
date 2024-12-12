@@ -2,7 +2,7 @@ const axios = require('axios');
 
 // eslint-disable-next-line consistent-return
 exports.handler = async (context, _, callback) => {
-  const { RP_DOMAIN, API_URL } = context;
+  const { DOMAIN_NAME, API_URL } = context;
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -10,12 +10,12 @@ exports.handler = async (context, _, callback) => {
   response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET');
   response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
 
-  const { username, password } = context.getTwilioClient();
+  const { username: clientSID, password: clientToken } = context.getTwilioClient();
 
   const requestBody = {
     content: {
       // eslint-disable-next-line camelcase
-      rp_id: RP_DOMAIN,
+      rp_id: DOMAIN_NAME,
     },
   };
 
@@ -24,8 +24,8 @@ exports.handler = async (context, _, callback) => {
   try {
     const APIResponse = await axios.post(challengeURL, requestBody, {
       auth: {
-        username,
-        password,
+        username: clientSID,
+        password: clientToken,
       },
     });
 

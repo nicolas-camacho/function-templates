@@ -22,7 +22,7 @@ exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  const { username, password } = context.getTwilioClient();
+  const { username: clientSID, password: clientToken } = context.getTwilioClient();
 
   const responseData = event.response
     ? event.response
@@ -47,8 +47,8 @@ exports.handler = async (context, event, callback) => {
   try {
     const APIResponse = await axios.post(verifyFactorURL, requestBody, {
       auth: {
-        username,
-        password,
+        username: clientSID,
+        password: clientToken,
       },
     });
     response.setStatusCode(200);

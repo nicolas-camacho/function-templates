@@ -27,7 +27,6 @@ In your `.env` file, set the following values (please check the [details](#varia
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
 | API_URL | Twilio Passkeys API to point at | yes |
-| RP_DOMAIN | The main relying party domain of the client apps | yes
 | ORIGINS | All the URLs from the apps that will be communicating with this backend | yes
 | ANDROID_APP_KEYS | The domain of the adroid identity providers hash | no |
 | ACCOUNT_SID | Twilio account where the service belong | yes |
@@ -59,7 +58,7 @@ Besides the enviroment variables files, the project also contain two files calle
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-| ORIGIN_IOS_APP_HASH | Replace it with the identificator of the iOS app | yes |
+| ABCDE12345.com.example.app | Replace it with the identificator of the iOS app | yes |
 
 This variable should follow the format of the [Supporting associated domains](https://developer.apple.com/documentation/xcode/supporting-associated-domains) from Apple.
 
@@ -67,7 +66,7 @@ This variable should follow the format of the [Supporting associated domains](ht
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-| RELYING_PARTY | Replace it with the value of the RP_DOMAIN varible in a full URL format | yes |
+| https://example.com | Replace it with the value of the RP_DOMAIN varible in a full URL format | yes |
 | FINGERPRINT_CERTIFICATION_HASH | Replace it with the hash fingerprint given by android app in format SHA256 | yes |
 
 

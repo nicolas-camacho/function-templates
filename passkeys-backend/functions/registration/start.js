@@ -4,7 +4,7 @@ const assets = Runtime.getAssets();
 const { detectMissingParams } = require(assets['/services/helpers.js'].path);
 
 exports.handler = async (context, event, callback) => {
-  const { ORIGINS, RP_DOMAIN, API_URL, ANDROID_APP_KEYS } = context;
+  const { ORIGINS, DOMAIN_NAME, API_URL, ANDROID_APP_KEYS } = context;
 
   const response = new Twilio.Response();
   response.appendHeader('Content-Type', 'application/json');
@@ -23,7 +23,7 @@ exports.handler = async (context, event, callback) => {
     return callback(null, response);
   }
 
-  const { username, password } = context.getTwilioClient();
+  const { username: clientSID, password: clientToken } = context.getTwilioClient();
 
   // Request body sent to passkeys verify URL call
   /* eslint-disable camelcase */
@@ -37,7 +37,7 @@ exports.handler = async (context, event, callback) => {
         display_name: event.username,
       },
       relying_party: {
-        id: RP_DOMAIN,
+        id: DOMAIN_NAME,
         name: 'PasskeySample',
         origins: [
           ...(ORIGINS.split(',') || []),
@@ -59,8 +59,8 @@ exports.handler = async (context, event, callback) => {
   try {
     const APIResponse = await axios.post(factorURL, requestBody, {
       auth: {
-        username,
-        password,
+        username: clientSID,
+        password: clientToken,
       },
     });
 
