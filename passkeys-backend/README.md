@@ -1,4 +1,4 @@
-# passkeys-backend
+# Verify Passkeys
 
 Verify enables developers to easily add the Passkeys functionality into their existing authentication flows or add this backend as service to comunicate with the twilio  Verify Passkesy API, similar to Verify TOTP and Push. The Verify API supports passkey registration, public key storage, and auth flows. On the client-side, developers can optionally embed an open-source library (SDK) that handles interactions with operating systems and customizable UI widgets that maximize conversion.
 
@@ -26,11 +26,58 @@ In your `.env` file, set the following values (please check the [details](#varia
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-| API_URL | Twilio Passkeys API to point at | yes |
-| ORIGINS | All the URLs from the apps that will be communicating with this backend | yes
-| ANDROID_APP_KEYS | The domain of the adroid identity providers hash | no |
-| ACCOUNT_SID | Twilio account where the service belong | yes |
-| AUTH_TOKEN | Authentication token for twilio account | yes |
+| `API_URL`            | Passkeys API to point at                              | Yes |
+| `ORIGINS` | All the URLs from the apps that will be communicating with this backend | yes
+| `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console) | Yes |
+| `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console) | Yes |
+| `ANDROID_APP_KEYS`   | The domain of the Android identity providers hash     | No  |
+
+## Create a new project with the template
+
+1. Install the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart#install-twilio-cli)
+2. Install the [serverless toolkit](https://www.twilio.com/docs/labs/serverless-toolkit/getting-started)
+
+```shell
+twilio plugins:install @twilio-labs/plugin-serverless
+```
+
+3. Initiate a new project
+
+```
+twilio serverless:init passkeys-sample --template=passkeys-backend && cd passkeys-sample
+```
+
+4. Add your environment variables to `.env`:
+
+Make sure variables are populated in your `.env` file. See [Environment variables](#environment-variables).
+
+5. Start the server :
+
+```
+npm start
+```
+
+5. Open the web page at https://localhost:3000/index.html and enter your phone number to test
+
+ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
+
+6. [optional] Configure email verification
+
+[Follow the instructions in the docs](https://www.twilio.com/docs/verify/email) to set up email verification.
+
+## Deploying
+
+Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
+
+With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
+
+```
+twilio serverless:deploy
+```
+
+## Working with this project
+
+The following describes customization options and more details for understanding how this application works.
 
 ### Variables details
 
@@ -69,7 +116,6 @@ This variable should follow the format of the [Supporting associated domains](ht
 | https://example.com | Replace it with the value of the RP_DOMAIN varible in a full URL format | yes |
 | FINGERPRINT_CERTIFICATION_HASH | Replace it with the hash fingerprint given by android app in format SHA256 | yes |
 
-
 ### Function Parameters
 
 `/registration/start` expects the following parameters:
@@ -103,12 +149,3 @@ This variable should follow the format of the [Supporting associated domains](ht
 | signature | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 | userHandle | A base64url encoded object given by the `AuthenticatorAttestationResponse` | yes |
 
-## Deploying
-
-Deploy your functions and assets with either of the following commands. Note: you must run these commands from inside your project folder. [More details in the docs.](https://www.twilio.com/docs/labs/serverless-toolkit)
-
-With the [Twilio CLI](https://www.twilio.com/docs/twilio-cli/quickstart):
-
-```
-twilio serverless:deploy
-```

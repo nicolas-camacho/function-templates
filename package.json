@@ -89,7 +89,6 @@
     "forward-call",
     "forward-message",
     "forward-message-mailgun",
-    "forward-message-multiple",
     "forward-message-sendgrid",
     "forward-message-sparkpost",
     "frontline-quickstart",
@@ -143,6 +142,7 @@
     "verify-prefill",
     "reminder-message",
     "passkeys-backend",
+    "block-spam-calls",
     "ai-assistants-samples"
   ]
 }

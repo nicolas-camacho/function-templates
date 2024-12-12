@@ -44,6 +44,9 @@ exports.handler = async (context, event, callback) => {
           ...(ANDROID_APP_KEYS.split(',') || []),
         ],
       },
+      user: {
+        display_name: event.username,
+      },
       authenticator_criteria: {
         authenticator_attachment: 'platform',
         discoverable_credentials: 'preferred',
