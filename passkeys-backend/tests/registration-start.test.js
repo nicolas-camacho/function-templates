@@ -17,7 +17,7 @@ const mockClient = {
 
 const mockContext = {
   DOMAIN_NAME: 'example.com',
-  SERVICE_SID: 'VAxxx',
+  VERIFY_SERVICE_SID: 'VAxxx',
   getTwilioClient: () => mockClient,
 };
 

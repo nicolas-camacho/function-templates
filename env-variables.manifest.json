@@ -1792,7 +1792,7 @@
     ],
     "passkeys-backend": [
       {
-        "key": "SERVICE_SID",
+        "key": "VERIFY_SERVICE_SID",
         "required": false,
         "format": "sid",
         "description": "[Optional] SID of the Verify Service with Passkeys enabled. Leave empty and call /registration/service once to create one.",

@@ -6,7 +6,7 @@ const { detectMissingParams, jsonResponse } = require(
 );
 
 exports.handler = async (context, event, callback) => {
-  const { SERVICE_SID } = context;
+  const { VERIFY_SERVICE_SID } = context;
 
   const response = jsonResponse();
 
@@ -32,7 +32,7 @@ exports.handler = async (context, event, callback) => {
   try {
     /* eslint-disable camelcase */
     const factor = await client.verify.v2
-      .services(SERVICE_SID)
+      .services(VERIFY_SERVICE_SID)
       .newFactors.create({
         friendly_name: event.username,
         identity: uuidIdentity,

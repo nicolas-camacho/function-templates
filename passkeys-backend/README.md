@@ -24,7 +24,7 @@ In your `.env` file, set the following values:
 | :------- | :---------- | :------- |
 | `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console) | Yes |
 | `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console) | Yes |
-| `SERVICE_SID`        | Verify Service with Passkeys enabled. See [Obtaining the SERVICE_SID](#obtaining-the-service_sid) | No |
+| `VERIFY_SERVICE_SID`        | Verify Service with Passkeys enabled. See [Obtaining the VERIFY_SERVICE_SID](#obtaining-the-verify_service_sid) | No |
 
 ## Create a new project with the template
 
@@ -88,9 +88,9 @@ Besides the enviroment variables files, the project also contain two files calle
 | RELYING_PARTY | Replace it with the value of the relaying party | yes |
 | FINGERPRINT_CERTIFICATION_HASH | Replace it with the hash fingerprint given by android app in format SHA256 | yes |
 
-`origins.js` contains the origins from where passkeys creation and authentication will be allowed. It is also served at `/.well-known/webauthn` so that browsers can validate related origin requests.
+`origins.private.js` contains the origins from where passkeys creation and authentication will be allowed. It is also served at `/.well-known/webauthn` so that browsers can validate related origin requests.
 
-#### Obtaining the SERVICE_SID
+#### Obtaining the VERIFY_SERVICE_SID
 
 In order to start working with the rest of the Twilio Verify Passkeys API, you will need a Verify Service with Passkeys enabled. You can create one by calling the `/registration/service` endpoint once:
 
@@ -98,7 +98,7 @@ In order to start working with the rest of the Twilio Verify Passkeys API, you w
 curl -X POST https://<your-domain>/registration/service
 ```
 
-The response contains the `sid` of the new service. Set it as `SERVICE_SID` in your environment variables and redeploy.
+The response contains the `sid` of the new service. Set it as `VERIFY_SERVICE_SID` in your environment variables and redeploy.
 
 Inside that function you can modify the parameters of the service creation, like `friendlyName` or `passkeys.relyingParty.name`, to customize it to your needs.
 

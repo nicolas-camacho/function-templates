@@ -2,7 +2,7 @@ const assets = Runtime.getAssets();
 const { jsonResponse } = require(assets['/services/helpers.js'].path);
 
 exports.handler = async (context, _, callback) => {
-  const { SERVICE_SID } = context;
+  const { VERIFY_SERVICE_SID } = context;
 
   const response = jsonResponse();
 
@@ -14,7 +14,7 @@ exports.handler = async (context, _, callback) => {
      * credential the user picks on their device.
      */
     const challenge = await client.verify.v2
-      .services(SERVICE_SID)
+      .services(VERIFY_SERVICE_SID)
       .newChallenge()
       .create({});
 

@@ -4,7 +4,7 @@ const { isEmpty, jsonResponse, credentialFrom } = require(
 );
 
 exports.handler = async (context, event, callback) => {
-  const { SERVICE_SID } = context;
+  const { VERIFY_SERVICE_SID } = context;
 
   const response = jsonResponse();
 
@@ -21,7 +21,7 @@ exports.handler = async (context, event, callback) => {
 
   try {
     const verifiedFactor = await client.verify.v2
-      .services(SERVICE_SID)
+      .services(VERIFY_SERVICE_SID)
       .newVerifyFactors.update(
         credentialFrom(event, [
           'attestationObject',

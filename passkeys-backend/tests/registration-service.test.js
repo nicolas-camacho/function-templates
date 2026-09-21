@@ -22,7 +22,7 @@ const mockContext = {
 describe('registration/service', () => {
   beforeAll(() => {
     const runtime = new helpers.MockRuntime();
-    runtime._addAsset('/origins.js', '../assets/origins.js');
+    runtime._addAsset('/origins.js', '../assets/origins.private.js');
     runtime._addAsset(
       '/services/helpers.js',
       '../assets/services/helpers.private.js'

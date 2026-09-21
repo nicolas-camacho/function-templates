@@ -7,7 +7,7 @@ const mockContext = {
 describe('.well-known/webauthn', () => {
   beforeAll(() => {
     const runtime = new helpers.MockRuntime();
-    runtime._addAsset('/origins.js', '../assets/origins.js');
+    runtime._addAsset('/origins.js', '../assets/origins.private.js');
     helpers.setup(mockContext, runtime);
     handlerFunction = require('../functions/.well-known/webauthn').handler;
   });

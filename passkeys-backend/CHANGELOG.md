@@ -11,13 +11,18 @@
 
 ### Added
 
-- `/registration/service` endpoint to create the passkeys enabled Verify Service and return its `SERVICE_SID`.
+- `/registration/service` endpoint to create the passkeys enabled Verify Service and return its `VERIFY_SERVICE_SID`.
 - `/.well-known/webauthn` endpoint serving the allowed origins for related origin requests.
 - CORS headers on the passkeys endpoints so the mobile SDKs can call them.
 
+### Fixed
+
+- Renamed the `SERVICE_SID` environment variable to `VERIFY_SERVICE_SID`. `SERVICE_SID` is a reserved context variable on deployed Functions holding the Serverless Service SID, so the Verify Service SID was being shadowed in production.
+- `assets/origins.js` is now `assets/origins.private.js`. `Runtime.getAssets()` only exposes private assets, so `/.well-known/webauthn` and `/registration/service` threw at load time.
+
 ### Removed
 
-- `API_URL` and `ANDROID_APP_KEYS` environment variables. The helper library resolves the API URL, and extra origins now live in `assets/origins.js`.
+- `API_URL` and `ANDROID_APP_KEYS` environment variables. The helper library resolves the API URL, and extra origins now live in `assets/origins.private.js`.
 
 ## [1.0.0]
 ### Added
