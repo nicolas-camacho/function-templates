@@ -1792,20 +1792,10 @@
     ],
     "passkeys-backend": [
       {
-        "key": "API_URL",
-        "required": true,
-        "format": "url",
-        "description": "The URL of the API for passkeys",
-        "link": null,
-        "default": "https://comms.twilio.com/preview",
-        "configurable": true,
-        "contentKey": null
-      },
-      {
-        "key": "ANDROID_APP_KEYS",
+        "key": "SERVICE_SID",
         "required": false,
-        "format": "list(text)",
-        "description": "[Optional] Comma separated domains for Android application",
+        "format": "sid",
+        "description": "[Optional] SID of the Verify Service with Passkeys enabled. Leave empty and call /registration/service once to create one.",
         "link": null,
         "default": null,
         "configurable": true,

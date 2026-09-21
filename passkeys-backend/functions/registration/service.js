@@ -1,46 +1,33 @@
-const axios = require('axios');
-
 const assets = Runtime.getAssets();
 const { origins } = require(assets['/origins.js'].path);
+const { jsonResponse } = require(assets['/services/helpers.js'].path);
 
-exports.handler = async function (context, event, callback) {
-  const { DOMAIN_NAME, API_URL } = context;
+exports.handler = async function (context, _, callback) {
+  const { DOMAIN_NAME } = context;
 
-  const response = new Twilio.Response();
-  response.appendHeader('Content-Type', 'application/json');
-  response.appendHeader('Access-Control-Allow-Origin', '*');
-  response.appendHeader('Access-Control-Allow-Methods', 'OPTIONS, POST, GET');
-  response.appendHeader('Access-Control-Allow-Headers', 'Content-Type');
+  const response = jsonResponse();
 
-  const { username, password } = context.getTwilioClient();
-
-  const data = new URLSearchParams();
-  data.append('FriendlyName', 'Passkeys Sample Backend');
-  data.append('Passkeys.RelyingParty.Id', DOMAIN_NAME);
-  data.append('Passkeys.RelyingParty.Name', 'Passkeys Sample Backend');
-  data.append('Passkeys.RelyingParty.Origins', origins(context).join(','));
-  data.append('Passkeys.AuthenticatorAttachment', 'platform');
-  data.append('Passkeys.DiscoverableCredentials', 'preferred');
-  data.append('Passkeys.UserVerification', 'preferred');
-
-  const createServiceURL = `${API_URL}`;
+  const client = context.getTwilioClient();
 
   try {
-    const APIResponse = await axios.post(createServiceURL, data, {
-      headers: {
-        'Content-Type': 'application/x-www-form-urlencoded',
-      },
-      auth: {
-        username,
-        password,
-      },
+    const service = await client.verify.v2.services.create({
+      friendlyName: 'Passkeys Sample Backend',
+      'passkeys.relyingParty.id': DOMAIN_NAME,
+      'passkeys.relyingParty.name': 'Passkeys Sample Backend',
+      'passkeys.relyingParty.origins': origins(context).join(','),
+      'passkeys.authenticatorAttachment': 'platform',
+      'passkeys.discoverableCredentials': 'preferred',
+      'passkeys.userVerification': 'preferred',
     });
 
     response.setStatusCode(200);
-    response.setBody(APIResponse.data);
+    response.setBody({
+      sid: service.sid,
+      friendlyName: service.friendlyName,
+      passkeys: service.passkeys,
+    });
   } catch (error) {
-    const statusCode = error.status || 400;
-    response.setStatusCode(statusCode);
+    response.setStatusCode(error.status || 400);
     response.setBody(error.message);
   }
 

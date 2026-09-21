@@ -2,6 +2,8 @@
 
 Verify enables developers to easily add Passkeys into their existing authentication flows, similar to Verify TOTP and Push. The Verify API supports passkey registration, public key storage, and auth flows. On the client-side, developers can optionally embed an open-source library (SDK) that handles interactions with operating systems and customizable UI widgets that maximize conversion.
 
+The functions talk to the Verify Passkeys API through the [Twilio Node helper library](https://www.twilio.com/docs/libraries/reference/twilio-node) (`context.getTwilioClient().verify.v2`), so there is no API URL or HTTP client to configure. See the [Verify Passkeys quickstart](https://www.twilio.com/docs/verify/quickstarts/passkeys) for the full API reference.
+
 ## How to use the template
 
 The best way to use the Function templates is through the Twilio CLI as described below. If you'd like to use the template without the Twilio CLI, [check out our usage docs](../docs/USING_FUNCTIONS.md).
@@ -20,10 +22,9 @@ In your `.env` file, set the following values:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
-| `API_URL`            | Passkeys API to point at                              | Yes |
 | `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console) | Yes |
 | `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console) | Yes |
-| `SERVICE_SID`        | Service created in Twilio verify | No |
+| `SERVICE_SID`        | Verify Service with Passkeys enabled. See [Obtaining the SERVICE_SID](#obtaining-the-service_sid) | No |
 
 ## Create a new project with the template
 
@@ -54,9 +55,7 @@ npm start
 
 ℹ️ Check the developer console and terminal for any errors, make sure you've set your environment variables.
 
-6. [optional] Configure email verification
-
-[Follow the instructions in the docs](https://www.twilio.com/docs/verify/email) to set up email verification.
+ℹ️ Passkeys require the relying party to match the domain serving the page, so the local server can only be used against `localhost`. To test from a device, deploy the project first.
 
 ## Deploying
 
@@ -74,7 +73,7 @@ The following describes customization options and more details for understanding
 
 ### Service customization
 
-Besides the enviroment variables files, the project also contain two files called `assetlink.json` and `apple-app-site-association` inside `./assets/.well-know/`, that is a public file that contains the identificators for the apps that will be connecting the service.
+Besides the enviroment variables files, the project also contain two files called `assetlinks.json` and `apple-app-site-association` inside `./assets/.well-known/`, that is a public file that contains the identificators for the apps that will be connecting the service.
 
 `apple-app-site-association` contains identificator hash for the origin app in iOS:
 
@@ -82,22 +81,26 @@ Besides the enviroment variables files, the project also contain two files calle
 | :------- | :---------- | :------- |
 | ORIGIN_IOS_APP_HASH | Replace it with the identificator of the iOS app | yes |
 
-`assetlink.json` contains identificator hash for the origin apps in android and web:
+`assetlinks.json` contains identificator hash for the origin apps in android and web:
 
 | Variable | Description | Required |
 | :------- | :---------- | :------- |
 | RELYING_PARTY | Replace it with the value of the relaying party | yes |
 | FINGERPRINT_CERTIFICATION_HASH | Replace it with the hash fingerprint given by android app in format SHA256 | yes |
 
-`origins.js` contains the origins from where passkeys creation and authentication will be allowed
+`origins.js` contains the origins from where passkeys creation and authentication will be allowed. It is also served at `/.well-known/webauthn` so that browsers can validate related origin requests.
 
-##### Obtaining the SERVICE_SID
+#### Obtaining the SERVICE_SID
 
-In order to start working with the rest of The Twilio Verify Passkeys API, you will need to create a Verify Service. You can do this through calling one time the `/registration/service` endpoint.
+In order to start working with the rest of the Twilio Verify Passkeys API, you will need a Verify Service with Passkeys enabled. You can create one by calling the `/registration/service` endpoint once:
 
-This will create a new Verify Service and return the `SERVICE_SID` that you will need to set in your environment variables.
+```
+curl -X POST https://<your-domain>/registration/service
+```
 
-Inside that function you can modify the parameters of the service creation, like `friendlyName` or `Passkeys.RelyingParty.Name` to customize it to your needs.
+The response contains the `sid` of the new service. Set it as `SERVICE_SID` in your environment variables and redeploy.
+
+Inside that function you can modify the parameters of the service creation, like `friendlyName` or `passkeys.relyingParty.name`, to customize it to your needs.
 
 ### Function Parameters
 
