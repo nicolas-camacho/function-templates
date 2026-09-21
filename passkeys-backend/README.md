@@ -14,8 +14,6 @@ The best way to use the Function templates is through the Twilio CLI as describe
 
 This project requires some environment variables to be set. A file named `.env` is used to store the values for those environment variables. To keep your tokens and secrets secure, make sure to not commit the `.env` file in git. When setting up the project with `twilio serverless:init ...` the Twilio CLI will create a `.gitignore` file that excludes `.env` from the version history.
 
-- Enable ACCOUNT_SID and AUTH_TOKEN in your functions configuration (https://www.twilio.com/console/functions/configure)
-
 You can find a `.env.example` file to copy for creating your own `.env` file
 
 In your `.env` file, set the following values:
@@ -24,7 +22,15 @@ In your `.env` file, set the following values:
 | :------- | :---------- | :------- |
 | `ACCOUNT_SID`        | Find in the [console](https://www.twilio.com/console) | Yes |
 | `AUTH_TOKEN`         | Find in the [console](https://www.twilio.com/console) | Yes |
-| `VERIFY_SERVICE_SID`        | Verify Service with Passkeys enabled. See [Obtaining the VERIFY_SERVICE_SID](#obtaining-the-verify_service_sid) | No |
+| `VERIFY_SERVICE_SID` | Verify Service with Passkeys enabled. See [Obtaining the VERIFY_SERVICE_SID](#obtaining-the-verify_service_sid) | No |
+| `IOS_APP_ID`         | See [Using this backend from an iOS or Android app](#using-this-backend-from-an-ios-or-android-app) | No |
+| `ANDROID_PACKAGE_NAME` | See [Using this backend from an iOS or Android app](#using-this-backend-from-an-ios-or-android-app) | No |
+| `ANDROID_SHA256_CERT_FINGERPRINT` | See [Using this backend from an iOS or Android app](#using-this-backend-from-an-ios-or-android-app) | No |
+
+`ACCOUNT_SID` and `AUTH_TOKEN` are needed because every Function in this template calls the Verify API through `context.getTwilioClient()`:
+
+- **Running locally**, the development server does not pick up your Twilio CLI profile. Put both values in `.env` (or export them in your shell and start with `--load-local-env`), otherwise `getTwilioClient()` throws.
+- **Once deployed**, enable them in your [Functions configuration](https://www.twilio.com/console/functions/configure) instead of storing them as environment variables.
 
 ## Create a new project with the template
 
@@ -71,24 +77,38 @@ twilio serverless:deploy
 
 The following describes customization options and more details for understanding how this application works.
 
+### Using this backend from an iOS or Android app
+
+Native apps only get to use the passkeys stored for this domain if the domain publicly declares that it trusts them, and if the Verify Service accepts the origin the app reports. Both sides are driven by environment variables, so there are no files to hand-edit.
+
+Set the values for the platforms you need and redeploy:
+
+| Variable | Platform | Where to find it |
+| :------- | :------- | :--------------- |
+| `IOS_APP_ID` | iOS | `<Team ID>.<bundle identifier>`, e.g. `ABCDE12345.com.example.passkeys`. The Team ID is in the [Apple Developer account page](https://developer.apple.com/account). |
+| `ANDROID_PACKAGE_NAME` | Android | The `applicationId` of your app module, e.g. `com.example.passkeys`. |
+| `ANDROID_SHA256_CERT_FINGERPRINT` | Android | Colon separated SHA-256 of the signing certificate: `keytool -list -v -keystore <keystore> -alias <alias>`. For Play-signed builds use the fingerprint shown in Play Console → Setup → App signing. |
+
+The template then serves everything the platforms look for:
+
+| Endpoint | Used by | Purpose |
+| :------- | :------ | :------ |
+| `/.well-known/apple-app-site-association` | iOS | Declares `IOS_APP_ID` under `webcredentials`. Served from a Function so it gets a `application/json` content type, which Apple requires. |
+| `/.well-known/assetlinks.json` | Android | Digital Asset Links statement with `delegate_permission/common.get_login_creds` for `ANDROID_PACKAGE_NAME`. |
+| `/.well-known/webauthn` | Browsers | Related origin requests, so other origins in the list can use the same passkeys. |
+
+On the app side:
+
+- **iOS:** add `webcredentials:<your-domain>` to the Associated Domains capability. iOS reports `https://<your-domain>` as the origin, which is always in the allow list.
+- **Android:** use the Credential Manager API with the same package name and signing key. Android reports its origin as `android:apk-key-hash:<base64url SHA-256 of the signing certificate>`; `assets/origins.private.js` derives that value from `ANDROID_SHA256_CERT_FINGERPRINT`, so you do not need to compute it yourself.
+
+The endpoints also send permissive CORS headers so the apps and any allowed web origin can call them.
+
+⚠️ The allowed origins are baked into the Verify Service when it is created. If you set `ANDROID_SHA256_CERT_FINGERPRINT` after creating the service, update the service's origins in the [console](https://www.twilio.com/console/verify/services) or create a new one.
+
 ### Service customization
 
-Besides the enviroment variables files, the project also contain two files called `assetlinks.json` and `apple-app-site-association` inside `./assets/.well-known/`, that is a public file that contains the identificators for the apps that will be connecting the service.
-
-`apple-app-site-association` contains identificator hash for the origin app in iOS:
-
-| Variable | Description | Required |
-| :------- | :---------- | :------- |
-| ORIGIN_IOS_APP_HASH | Replace it with the identificator of the iOS app | yes |
-
-`assetlinks.json` contains identificator hash for the origin apps in android and web:
-
-| Variable | Description | Required |
-| :------- | :---------- | :------- |
-| RELYING_PARTY | Replace it with the value of the relaying party | yes |
-| FINGERPRINT_CERTIFICATION_HASH | Replace it with the hash fingerprint given by android app in format SHA256 | yes |
-
-`origins.private.js` contains the origins from where passkeys creation and authentication will be allowed. It is also served at `/.well-known/webauthn` so that browsers can validate related origin requests.
+`assets/origins.private.js` builds the list of origins from which passkey creation and authentication is allowed. Edit it if you need to allow origins beyond the deployed domain and the Android app.
 
 #### Obtaining the VERIFY_SERVICE_SID
 

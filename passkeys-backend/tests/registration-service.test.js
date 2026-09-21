@@ -48,8 +48,7 @@ describe('registration/service', () => {
         friendlyName: 'Passkeys Sample Backend',
         'passkeys.relyingParty.id': 'example.com',
         'passkeys.relyingParty.name': 'Passkeys Sample Backend',
-        'passkeys.relyingParty.origins':
-          'https://example.com,android:apk-key-hash:{base64_hash}',
+        'passkeys.relyingParty.origins': 'https://example.com',
         'passkeys.authenticatorAttachment': 'platform',
         'passkeys.discoverableCredentials': 'preferred',
         'passkeys.userVerification': 'preferred',
